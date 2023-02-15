@@ -1,0 +1,3 @@
+pymysql
+# randomuser # for data_scrubber.py
+sqlalchemy

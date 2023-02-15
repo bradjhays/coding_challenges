@@ -1,0 +1,32 @@
+version: '3'
+
+# data/backup.sql will be automatically loaded into the DB container
+
+services:
+  database:
+    image: mariadb:10.5.8
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: my_secret_password
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_user_pass
+    ports:
+      - "6033:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./data/mysql:/tmp/mysql
+      - ./data/backup.sql:/docker-entrypoint-initdb.d/backup.sql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - database
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8080:80
+volumes:
+  dbdata:
